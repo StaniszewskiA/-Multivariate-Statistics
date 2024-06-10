@@ -51,61 +51,10 @@ Dodatkowo, dla zadań klasyfikacji binarnej, kolumna \textbf{Type\_of\_Renewable
 \end{itemize}
 
 \section{Laboratorium 1}
-\subsection{Regresja liniowa}
-Na początku przeprowadzamy prostą regresję liniową:
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\linewidth]{obraz.png}
-    \caption{Zmienna objaśniana - Installed Capacity MW. Zmienna objaśniająca - Energy Production MWh}
-    \label{fig:regression}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\linewidth]{obraz2.png}
-    \caption{Współczynniki regresji}
-    \label{fig:coefficients}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\linewidth]{obraz3.png}
-    \caption{Podsumowanie regresji liniowej}
-    \label{fig:summary}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\linewidth]{obraz4.png}
-    \caption{Wartości rzeczywiste vs przewidywane}
-    \label{fig:real_vs_predicted}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\linewidth]{obraz5.png}
-    \caption{Reszty regresji}
-    \label{fig:residuals}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.9\linewidth]{obraz6.png}
-    \caption{Heat values}
-    \label{fig:heat_values}
-\end{figure}
-
-\subsection{Regresja wielokrotna}
-Przejdźmy do regresji wielokrotnej. Będziemy przewidywać wartość \textbf{Installed\_Capacity\_MW} na podstawie zmiennych \textbf{Energy\_Production\_MWh} i \textbf{Energy\_Consumption\_MWh}.
+\include{lab1/lab1}
 
 \section{Laboratorium 2}
-\subsection{One hot encoding}
-\subsection{GLM}
-\subsection{Podział zbioru}
-\subsection{Metoda LDA}
-\subsection{Metoda QDA}
-\subsection{Metoda kNN}
+\include{lab2/lab2}
 
 \section{Laboratorium 3}
 \subsection{Walidacja krzyżowa}
@@ -179,7 +128,7 @@ Otrzymane wartości MSE:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\linewidth]{obraz8.png}
+    \includegraphics[width=0.8\linewidth]{lab1/obraz8.png}
     \caption{Zależność między wartością MSE a stopniem wielomianu.}
     \label{fig:enter-label}
 \end{figure}
@@ -239,5 +188,20 @@ Otrzymujemy:
 \subsubsection{Selekcja krokowa do przodu i wstecz}
 \subsubsection{Wybór modelu przy pomocy metody zbioru walidacyjnego}
 \subsubsection{Wybór modelu przy pomocy k-krotnej walidacji krzyżowej}
+
+\section{Laboratorium 4}
+\subsection{Regularyzacja}
+\subsubsection{Regresja grzbietowa}
+\subsubsection{Lasso}
+\subsection{Modele nieliniowe}
+\subsubsection{Regresja wielomianowa}
+\subsubsection{Regresja logistyczna wielomianowa}
+\subsubsection{Funkcje schodkowe}
+\subsection{Funkcje sklejane}
+\subsubsection{Naturalne funkcje sklejane}
+\subsubsection{Wygładzające funkcje sklejane}
+\subsection{Regresja lokalna}
+\subsection{Uogólnione modele addytywne (GAMs)}
+\subsection{GAM w GLM}
 
 \end{document}
