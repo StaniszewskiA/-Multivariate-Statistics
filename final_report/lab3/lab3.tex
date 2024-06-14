@@ -77,11 +77,15 @@ Otrzymane wartości MSE:
 \subsubsection{Walidacja krzyżowa bez jednego (leave-one-out)}
 
 \begin{Rcode}
-compute_loocv_mse <- function(degree) {
-  energy_glm <- glm(Type_of_Renewable_Energy ~ poly(Energy_Production_MWh, degree), data = energy_data)
-  cv.glm(energy_data, energy_glm)$delta[1]
+set.seed(2)
+train <- sample(n, n / 2)
+validation_set <- energy_data[-train,]
+degree_max <- 10
+mse <- rep(0, times = degree_max)
+for (i in 1:degree_max) {
+  energy_lm <- lm(Type_of_Renewable_Energy ~ poly(Energy_Production_MWh, degree = i), data = energy_data, subset = train)
+  mse[i] <- mean((validation_set$Type_of_Renewable_Energy - predict(energy_lm, validation_set))^2)
 }
-mse <- sapply(1:degree_max, compute_loocv_mse)
 mse
 \end{Rcode}
 
@@ -138,14 +142,34 @@ boot(energy_data, lm_coefs, R = 1000)
 
 W ten sposób obliczyliśmy błąd standardowy z 1000 replikacji.
 
-\begin{figure}
+\begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{lab3/obraz2.png}
-    \caption{Enter Caption}
+    \caption{Wyniki dla regresji liniowej z użyciem metody boostrap}
     \label{fig:enter-label}
 \end{figure}
 
-\textbf{PORÓWNAJ Z FUNKCJĄ LM I POWTÓRZ DLA REGRESJI KWADRATOWEJ}
+Powtórzmy eksperyment dla regresji kwadratowej:
+
+\begin{Rcode}
+lm_coefs <- function(data, index = 1:nrow(data)) {
+  coef(lm(Type_of_Renewable_Energy ~ (Energy_Production_MWh)^2, data = energy_data, subset = index))
+}
+
+n <- nrow(energy_data)
+lm_coefs(energy_data, sample(n, n, replace = TRUE))
+
+lm_coefs(energy_data)
+
+boot(energy_data, lm_coefs, R = 1000)
+\end{Rcode}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{lab3/obraz2_5.png}
+    \caption{Wyniki dla regresji kwadratowej z użyciem metody boostrap}
+    \label{fig:enter-label}
+\end{figure}
 
 \subsection{Selekcja cech dla modeli liniowych}
 Podzielmy nasz główny zbiór na podzbiory za pomocą metody \textit{regsubsets}. Wykorzystamy wszystkie 12 zmiennych objaśniających
@@ -175,8 +199,15 @@ plot(energy_bs, scale = "bic")
 
 \begin{figure}[H]
     \centering
+    \includegraphics[width=1\linewidth]{lab3/obraz3_5.png}
+    \caption{Liczba zmiennych a wartość BIC}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
     \includegraphics[width=1\linewidth]{lab3/obraz3.png}
-    \caption{Enter Caption}
+    \caption{Ocena predyktorów}
     \label{fig:enter-label}
 \end{figure}
 
@@ -191,11 +222,27 @@ coef(energy_bs, id = 8)
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{lab3/obraz4.png}
-    \caption{Enter Caption}
+    \caption{Podusmowanie dla metryki BIC}
     \label{fig:enter-label}
 \end{figure}
 
-\textbf{UŻYJ JESZCZE INNYCH KRYTERIÓW}
+Wykorzystajmy jeszcze metrykę \textbf{$R^2$}, zaimplementowaną analogicznie do BIC.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{lab3/obraz6.png}
+    \caption{Liczba zmiennych a wartość $R^2$}
+    \label{fig:enter-label}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{lab3/obraz7.png}
+    \caption{Ocena predyktorów}
+    \label{fig:enter-label}
+\end{figure}
+
+Według metryki $R^2$, najlepszymi predyktorami są \textbf{Initial\_Investment\_USD} i \textbf{GHG\_Emission\_Reduction\_tCO2e}.
 
 \subsubsection{Selekcja krokowa do przodu i wstecz}
 Używamy teraz selekcji krokowej
@@ -245,6 +292,12 @@ val_errors <- sapply(1:10, prediction_error, model = energy_bs_v, subset = test)
 val_errors   
 \end{Rcode}
 
+Otrzymaliśmy takie wartości błędu: 
+\begin{Rcode}
+4.013148 4.012435 4.012165 4.011892 4.011292 4.011261 4.011174 4.010870 4.010838 4.010614
+\end{Rcode}
+Możemy więc wywnioskować, że optymalny model ma 10 parametrów.
+
 \subsubsection{Wybór modelu przy pomocy k-krotnej walidacji krzyżowej}
 
 \begin{Rcode}
@@ -260,3 +313,11 @@ for (j in 1:k) {
 cv_errors <- colMeans(val_err)
 cv_errors
 \end{Rcode}
+
+Otrzymaliśmy takie wartości błędów:
+
+\begin{Rcode}
+3.998710 3.996294 3.998936 3.999858 4.000146 4.000639 4.000911 4.000728 4.000925 4.000906
+\end{Rcode}
+
+Według tego kryterium, optymalny model powinien mieć dwa parametry.

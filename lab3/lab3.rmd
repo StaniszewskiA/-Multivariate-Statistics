@@ -15,9 +15,7 @@ head(energy_data)
 # names(energy_data)
 # dim(energy_data)
 ```
-## Including Plots
 
-You can also embed plots, for example:
 
 ```{r}
 set.seed(1)
@@ -56,12 +54,18 @@ mse
 plot(mse, xlab = "Stopień wielomianu", ylab = "MSE", type = "b", pch = 20, 
      col = "blue")
 ```
+
 ```{r}
 library(boot)
+library(stats)
+
+degree_max <- 1
+
 compute_loocv_mse <- function(degree) {
   energy_glm <- glm(Type_of_Renewable_Energy ~ poly(Energy_Production_MWh, degree), data = energy_data)
   cv.glm(energy_data, energy_glm)$delta[1]
 }
+
 mse <- sapply(1:degree_max, compute_loocv_mse)
 mse
 ```
@@ -87,20 +91,14 @@ matplot(mse10, pch = 20, type = "l", xlim = c(1, degree_max), ylim = c(18, 25),
 
 ```{r}
 lm_coefs <- function(data, index = 1:nrow(data)) {
-  coef(lm(Type_of_Renewable_Energy ~ Energy_Production_MWh, data = energy_data, subset = index))
+  coef(lm(Type_of_Renewable_Energy ~ (Energy_Production_MWh)^2, data = energy_data, subset = index))
 }
-```
 
-```{r}
 n <- nrow(energy_data)
 lm_coefs(energy_data, sample(n, n, replace = TRUE))
-```
 
-```{r}
 lm_coefs(energy_data)
-```
 
-```{r}
 boot(energy_data, lm_coefs, R = 1000)
 ```
 
@@ -110,37 +108,44 @@ library(leaps)
 ```
 
 ```{r}
-energy_bs <- regsubsets(Type_of_Renewable_Energy ~ ., data = energy_data)
-summary(energy_bs)
-```
-
-```{r}
-energy_bs <- regsubsets(Type_of_Renewable_Energy ~ ., data = energy_data, nvmax=10)
+energy_bs <- regsubsets(Type_of_Renewable_Energy ~ ., data = energy_data, nvmax=12)
 energy_bs_sum <- summary(energy_bs)
-energy_bs_sum
-```
-```{r}
-energy_bs_sum$cp
-```
 
-```{r}
+energy_bs_sum$cp
 bic_min <- which.min(energy_bs_sum$bic)
 bic_min
 energy_bs_sum$bic[bic_min]
-```
 
-```{r}
+energy_bs_sum
+
 plot(energy_bs_sum$bic, xlab = "Liczba zmiennych", ylab = "BIC", col = "green",
      type = "b", pch = 20)
 points(bic_min, energy_bs_sum$bic[bic_min], col = "red", pch = 9)
-```
 
-```{r}
 plot(energy_bs, scale = "bic")
 ```
+```{r}
+library(leaps)  
+energy_bs <- regsubsets(Type_of_Renewable_Energy ~ ., data = energy_data, nvmax = 12)
+energy_bs_sum <- summary(energy_bs)
+
+r2_values <- energy_bs_sum$rsq
+
+r2_max <- which.max(r2_values)
+r2_max_value <- r2_values[r2_max]
+
+print(paste("Highest R2 is at model:", r2_max))
+print(paste("R2 value:", r2_max_value))
+
+plot(r2_values, xlab = "Liczba zmiennych", ylab = "R2", col = "blue", type = "b", pch = 20)
+points(r2_max, r2_values[r2_max], col = "red", pch = 9)
+
+plot(energy_bs, scale = "r2")
+```
+
 
 ```{r}
-coef(energy_bs, id = 6)
+coef(energy_bs, id = 8)
 ```
 
 ```{r}
@@ -177,6 +182,12 @@ prediction_error <- function(i, model, subset) {
 }
 val_errors <- sapply(1:10, prediction_error, model = energy_bs_v, subset = test)
 val_errors
+
+best_model_index <- which.min(val_errors)
+
+best_model <- energy_bs_v[[best_model_index]]
+print(best_model_index)
+
 ```
 
 ```{r}
@@ -188,9 +199,7 @@ for (j in 1:k) {
   err <- sapply(1:10, prediction_error, model = fit_bs, subset = (folds == j))
   val_err <- rbind(val_err, err)
 }
-```
 
-```{r}
 cv_errors <- colMeans(val_err)
 cv_errors
 ```
