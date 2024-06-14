@@ -3,42 +3,42 @@ Na początku przeprowadzamy prostą regresję liniową:
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\linewidth]{lab1/obraz.png}
+    \includegraphics[width=1\linewidth]{lab1/obraz.png}
     \caption{Zmienna objaśniana - Installed Capacity MW. Zmienna objaśniająca - Energy Production MWh}
     \label{fig:regression}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\linewidth]{lab1/obraz2.png}
+1    \includegraphics[width=0.9\linewidth]{lab1/obraz2.png}
     \caption{Współczynniki regresji}
     \label{fig:coefficients}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\linewidth]{lab1/obraz3.png}
+    \includegraphics[width=1\linewidth]{lab1/obraz3.png}
     \caption{Podsumowanie regresji liniowej}
     \label{fig:summary}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\linewidth]{lab1/obraz4.png}
+    \includegraphics[width=1\linewidth]{lab1/obraz4.png}
     \caption{Wartości rzeczywiste vs przewidywane}
     \label{fig:real_vs_predicted}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\linewidth]{lab1/obraz5.png}
+    \includegraphics[width=1\linewidth]{lab1/obraz5.png}
     \caption{Reszty regresji}
     \label{fig:residuals}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\linewidth]{lab1/obraz6.png}
+    \includegraphics[width=1\linewidth]{lab1/obraz6.png}
     \caption{Heat values}
     \label{fig:heat_values}
 \end{figure}
@@ -53,7 +53,7 @@ fit_la <- lm(energy_data$Installed_Capacity_MW ~ energy_data$Energy_Production_M
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{lab1/obraz9.png}
-    \caption{Enter Caption}
+    \caption{Parametry metody fit\_la}
     \label{fig:enter-label}
 \end{figure}
 
@@ -67,14 +67,7 @@ fit_all <- lm(Installed_Capacity_MW ~ ., data = numerical_data)
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{lab1/obraz10.png}
-    \caption{Enter Caption}
-    \label{fig:enter-label}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\linewidth]{lab1/obraz11.png}
-    \caption{Enter Caption}
+    \caption{Podusmowanie regresji wielokrotnej}
     \label{fig:enter-label}
 \end{figure}
 
@@ -97,7 +90,7 @@ Wybrane przedziały ufności:
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{lab1/obraz13.png}
-    \caption{Enter Caption}
+    \caption{Przedział ufności zmiennych objaśniająych zmienną Installed Capacity.}
     \label{fig:enter-label}
 \end{figure}
 
@@ -113,6 +106,6 @@ summary(lm(Energy_Production_MWh ~ log(Energy_Consumption_MWh), data = energy_da
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{lab1/obraz14.png}
-    \caption{Enter Caption}
+    \caption{Podusmowanie regresji}
     \label{fig:enter-label}
 \end{figure}
